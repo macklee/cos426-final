@@ -2,7 +2,8 @@
 PlayerTank = function (game, player) {
 
     var x = game.world.randomX;
-    var y = game.world.randomY;
+    // var y = game.world.randomY;
+    var y = game.rnd.integerInRange(0, game.height-64);
 
     this.game = game;
     this.health = 3;
