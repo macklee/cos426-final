@@ -1,9 +1,9 @@
 <!doctype html> 
 <html lang="en"> 
 <head> 
-	<meta charset="UTF-8" />
-	<title>Phaser - Making your first game, part 1</title>
-	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 1</title>
+    <script type="text/javascript" src="js/phaser.min.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -20,7 +20,8 @@ function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.image('bullet', 'assets/bullet164.png');
+    game.load.image('tank', 'assets/advanced_wars_tank.png', 32, 48);
 
     
 }
@@ -57,8 +58,8 @@ function create() {
     ledge.body.immovable = true;
 
     // The player and its settings
-    player = game.add.sprite(32, game.world.height - 150, 'dude');
-    player2 = game.add.sprite(game.world.width - 32, game.world.height - 150, 'dude');
+    player = game.add.sprite(32, game.world.height - 150, 'tank');
+    player2 = game.add.sprite(game.world.width - 32, game.world.height - 150, 'tank');
 
     //  We need to enable physics on the player
     game.physics.arcade.enable(player);
@@ -87,53 +88,58 @@ function create() {
 var turn;
 
 function update() {
+
+    //collide iwth platforms
+    var hitPlatform = game.physics.arcade.collide(player, platforms);
+    var hitPlatform2 = game.physics.arcade.collide(player2, platforms);
 //  Reset the players velocity (movement)
+
     player.body.velocity.x = 0;
     player2.body.velocity.x = 0;
     if (cursors.left.isDown)
     {
-    	if (turn == 0) {
-    		        //  Move to the left
-	        player.body.velocity.x = -150;
+        if (turn == 0) {
+                    //  Move to the left
+            player.body.velocity.x = -150;
 
-	        player.animations.play('left');
-    	}
+            player.animations.play('left');
+        }
 
-    	else if (turn == 1) {
-    		player2.body.velocity.x = -150;
+        else if (turn == 1) {
+            player2.body.velocity.x = -150;
 
-	        player2.animations.play('left');
-    	}
+            player2.animations.play('left');
+        }
 
     }
     else if (cursors.right.isDown)
     {
-    	if (turn == 0) {
-    		        //  Move to the left
-	        player.body.velocity.x = 150;
+        if (turn == 0) {
+                    //  Move to the left
+            player.body.velocity.x = 150;
 
-	        player.animations.play('right');
-    	}
+            player.animations.play('right');
+        }
 
-    	else if (turn == 1) {
-    		player2.body.velocity.x = 150;
+        else if (turn == 1) {
+            player2.body.velocity.x = 150;
 
-	        player2.animations.play('right');
-    	}
+            player2.animations.play('right');
+        }
     }
 
     else if (this.spaceKey.justPressed(1000))
     {
-    	if (turn == 0) {
-    		turn = 1;
-    		player.animations.stop();
-    		player.frame = 4;
-    	}
-    	else {
-    		turn = 0;
-    		player2.animations.stop();
-    		player2.frame = 4;
-    	}
+        if (turn == 0) {
+            turn = 1;
+            player.animations.stop();
+            player.frame = 4;
+        }
+        else {
+            turn = 0;
+            player2.animations.stop();
+            player2.frame = 4;
+        }
     }
 
     else
@@ -149,13 +155,41 @@ function update() {
     }
 
     //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && player.body.touching.down && hitPlatform)
+    if (cursors.up.isDown && player.body.touching.down)
     {
-        player.body.velocity.y = -350;
+    
+        if (turn == 0 && hitPlatform) {
+            player.body.velocity.y = -350;
+        }
+        else if (turn == 1 && hitPlatform2) {
+            player2.body.velocity.y = -350;
+        }
     }
 
 
 }
+
+function bulletHitPlayer (tank, bullet) {
+
+    bullet.kill();
+
+}
+
+function fire () {
+
+    if (game.time.now > nextFire && bullets.countDead() > 0)
+    {
+        nextFire = game.time.now + fireRate;
+
+        var bullet = bullets.getFirstExists(false);
+
+        bullet.reset(turret.x, turret.y);
+
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 1000, game.input.activePointer, 500);
+    }
+
+}
+
 
 </script>
 
