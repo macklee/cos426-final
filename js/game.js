@@ -7,6 +7,7 @@ PlayerTank = function (game, player) {
     this.game = game;
     this.health = 3;
     this.player = player;
+    //this.hpBar = this.add.bitmapData(3, 1);
     //this.animations = this.tank.animations;
     //this.bullets = bullets;
     this.alive = true;
@@ -32,6 +33,9 @@ PlayerTank = function (game, player) {
 
     // game.physics.arcade.velocityFromRotation(this.tank.rotation, 100, this.tank.body.velocity);
 
+    // stuff for tracking angle of fire, measured in radians
+    this.angle = 45;
+
 };
 
 PlayerTank.prototype.damage = function() {
@@ -49,6 +53,13 @@ PlayerTank.prototype.damage = function() {
 
     return false;
 
+}
+
+PlayerTank.prototype.endTurn = function() {
+    //  Stand still
+    this.tank.animations.stop();
+    this.tank.body.velocity.x = 0;
+    this.tank.frame = 4;
 }
 
 PlayerTank.prototype.update = function() {
@@ -125,13 +136,25 @@ function preload() {
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
     game.load.image('bullet', 'assets/bullet164.png');
-    game.load.image('tank', 'assets/advanced_wars_tank.png', 32, 48);
-
-    
+    game.load.image('tank', 'assets/advanced_wars_tank.png', 32, 48);    
 }
 var spaceKey;
 var player;
 var player2;
+var turn;
+
+function toggleTurn() {
+    turn = 1 - turn;
+    if (turn == 0) {
+        player.update();
+        player2.endTurn();
+    }
+    else if (turn == 1) {
+        player2.update();
+        player.endTurn();
+    }
+}
+
 function create() {
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -165,7 +188,8 @@ function create() {
 
     // The player and its settings
     player = new PlayerTank(game, 1);
-    player2 = new PlayerTank(game,2);
+    player2 = new PlayerTank(game, 2);
+
     //player = game.add.sprite(32, game.world.height - 150, 'tank');
     //player2 = game.add.sprite(game.world.width - 32, game.world.height - 150, 'tank');
 
@@ -186,24 +210,26 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
     this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
+    this.spaceKey.onDown.add(toggleTurn, this);
+    // game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
     turn = 0;
 }
-var turn;
 
 function update() {
     var hitPlatform = game.physics.arcade.collide(player.tank, platforms);
     var hitPlatform2 = game.physics.arcade.collide(player2.tank, platforms);
-    if (this.spaceKey.justPressed(2000))
-    {
-        turn = 1 - turn;      
-    }
+    // if (this.spaceKey.justPressed(2000))
+    // {
+    //     turn = 1 - turn;      
+    // }
 
     if (turn == 0) {
         player.update();
+        player2.endTurn();
     }
     else if (turn == 1) {
         player2.update();
+        player.endTurn();
     }
 
 }
