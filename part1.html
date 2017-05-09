@@ -14,8 +14,128 @@
 
 <script type="text/javascript">
 
+/************* CLASS FOR EACH TANK ****************/
+PlayerTank = function (game, player) {
+
+    var x = game.world.randomX;
+    var y = game.world.randomY;
+
+    this.game = game;
+    this.health = 3;
+    this.player = player;
+    //this.animations = this.tank.animations;
+    //this.bullets = bullets;
+    this.alive = true;
+
+    //this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
+    this.tank = game.add.sprite(x, y,'tank');
+    //this.turret = game.add.sprite(x, y, 'enemy', 'turret');
+
+    // this.shadow.anchor.set(0.5);
+    // this.tank.anchor.set(0.5);
+    // this.turret.anchor.set(0.3, 0.5);
+
+    //this.tank.name = index.toString();
+    game.physics.enable(this.tank, Phaser.Physics.ARCADE);
+    this.tank.body.immovable = false;
+    this.tank.body.collideWorldBounds = true;
+    //this.tank.body.bounce.setTo(1, 1);
+    this.tank.body.gravity.y = 300;
+    this.tank.animations.add('left', [0, 1, 2, 3], 10, true);
+    this.tank.animations.add('right', [5, 6, 7, 8], 10, true);
+    //var hitPlatform = game.physics.arcade.collide(this.tank, platforms);
+    // this.tank.angle = game.rnd.angle();
+
+    // game.physics.arcade.velocityFromRotation(this.tank.rotation, 100, this.tank.body.velocity);
+
+};
+
+PlayerTank.prototype.damage = function() {
+
+    this.health -= 1;
+
+    if (this.health <= 0)
+    {
+        this.alive = false;
+        this.tank.kill();
+        // this.turret.kill();
+
+        return true;
+    }
+
+    return false;
+
+}
+
+PlayerTank.prototype.update = function() {
+
+    // this.shadow.x = this.tank.x;
+    // this.shadow.y = this.tank.y;
+    // this.shadow.rotation = this.tank.rotation;
+
+    // this.turret.x = this.tank.x;
+    // this.turret.y = this.tank.y;
+    // this.turret.rotation = this.game.physics.arcade.angleBetween(this.tank, this.player);
+
+    // if (this.game.physics.arcade.distanceBetween(this.tank, this.player) < 300)
+    // {
+    //     if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
+    //     {
+    //         this.nextFire = this.game.time.now + this.fireRate;
+
+    //         var bullet = this.bullets.getFirstDead();
+
+    //         bullet.reset(this.turret.x, this.turret.y);
+
+    //         bullet.rotation = this.game.physics.arcade.moveToObject(bullet, this.player, 500);
+    //     }
+    // }
+        //collide iwth platforms
+    var hitPlatform = game.physics.arcade.collide(this.tank, platforms);
+    //var hitPlatform2 = game.physics.arcade.collide(player2, platforms);
+//  Reset the players velocity (movement)
+
+    this.tank.body.velocity.x = 0;
+ 
+    if (cursors.left.isDown)
+    {
+                    //  Move to the left
+        this.tank.body.velocity.x = -150;
+
+        this.tank.animations.play('left');
+
+    }
+    else if (cursors.right.isDown)
+    {
+ 
+                    //  Move to the left
+        this.tank.body.velocity.x = 150;
+
+        this.tank.animations.play('right');
+
+    }
+
+
+    else
+    {
+        //  Stand still
+        this.tank.animations.stop();
+        this.tank.frame = 4;        
+        
+    }
+
+    //  Allow the player to jump if they are touching the ground.
+    if (cursors.up.isDown && this.tank.body.touching.down)
+    {
+        this.tank.body.velocity.y = -350;
+    }
+
+};
+
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 var cursors;
+var platforms;
+
 function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
@@ -26,6 +146,8 @@ function preload() {
     
 }
 var spaceKey;
+var player;
+var player2;
 function create() {
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -58,28 +180,26 @@ function create() {
     ledge.body.immovable = true;
 
     // The player and its settings
-    player = game.add.sprite(32, game.world.height - 150, 'tank');
-    player2 = game.add.sprite(game.world.width - 32, game.world.height - 150, 'tank');
+    player = new PlayerTank(game, 1);
+    player2 = new PlayerTank(game,2);
+    //player = game.add.sprite(32, game.world.height - 150, 'tank');
+    //player2 = game.add.sprite(game.world.width - 32, game.world.height - 150, 'tank');
 
     //  We need to enable physics on the player
-    game.physics.arcade.enable(player);
-    game.physics.arcade.enable(player2);
+    //game.physics.arcade.enable(player);
+    //game.physics.arcade.enable(player2);
 
     //  Player physics properties. Give the little guy a slight bounce.
-    player.body.bounce.y = 0.2;
-    player.body.gravity.y = 300;
-    player.body.collideWorldBounds = true;
+    // player.body.bounce.y = 0.2;
+    // player.body.gravity.y = 300;
+    // player.body.collideWorldBounds = true;
 
-    player2.body.bounce.y = 0.2;
-    player2.body.gravity.y = 300;
-    player2.body.collideWorldBounds = true;
+    // player2.body.bounce.y = 0.2;
+    // player2.body.gravity.y = 300;
+    // player2.body.collideWorldBounds = true;
 
     //  Our two animations, walking left and right.
-    player.animations.add('left', [0, 1, 2, 3], 10, true);
-    player.animations.add('right', [5, 6, 7, 8], 10, true);
 
-    player2.animations.add('left', [0, 1, 2, 3], 10, true);
-    player2.animations.add('right', [5, 6, 7, 8], 10, true);
     cursors = game.input.keyboard.createCursorKeys();
     this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
@@ -88,84 +208,19 @@ function create() {
 var turn;
 
 function update() {
-
-    //collide iwth platforms
-    var hitPlatform = game.physics.arcade.collide(player, platforms);
-    var hitPlatform2 = game.physics.arcade.collide(player2, platforms);
-//  Reset the players velocity (movement)
-
-    player.body.velocity.x = 0;
-    player2.body.velocity.x = 0;
-    if (cursors.left.isDown)
+    var hitPlatform = game.physics.arcade.collide(player.tank, platforms);
+    var hitPlatform2 = game.physics.arcade.collide(player2.tank, platforms);
+    if (this.spaceKey.justPressed(2000))
     {
-        if (turn == 0) {
-                    //  Move to the left
-            player.body.velocity.x = -150;
-
-            player.animations.play('left');
-        }
-
-        else if (turn == 1) {
-            player2.body.velocity.x = -150;
-
-            player2.animations.play('left');
-        }
-
-    }
-    else if (cursors.right.isDown)
-    {
-        if (turn == 0) {
-                    //  Move to the left
-            player.body.velocity.x = 150;
-
-            player.animations.play('right');
-        }
-
-        else if (turn == 1) {
-            player2.body.velocity.x = 150;
-
-            player2.animations.play('right');
-        }
+        turn = 1 - turn;      
     }
 
-    else if (this.spaceKey.justPressed(1000))
-    {
-        if (turn == 0) {
-            turn = 1;
-            player.animations.stop();
-            player.frame = 4;
-        }
-        else {
-            turn = 0;
-            player2.animations.stop();
-            player2.frame = 4;
-        }
+    if (turn == 0) {
+        player.update();
     }
-
-    else
-    {
-        //  Stand still
-        player.animations.stop();
-        player.frame = 4;
-        player2.animations.stop();
-        player2.frame = 4;
-
-        
-        
+    else if (turn == 1) {
+        player2.update();
     }
-
-    //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-    
-        if (turn == 0 && hitPlatform) {
-            player.body.velocity.y = -350;
-        }
-        else if (turn == 1 && hitPlatform2) {
-            player2.body.velocity.y = -350;
-        }
-    }
-
 
 }
 
