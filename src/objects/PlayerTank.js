@@ -17,6 +17,7 @@ class PlayerTank extends Phaser.Sprite {
         this.final_timer = this.game.time.create();
         this.final_timerEvent = this.final_timer.add(Phaser.Timer.QUARTER, this.endTimer, this);
         this.index = 0;
+        this.didFireThisTurn = false;
 
         this.facingRight = true;
         var blurX_1 = this.game.add.filter('BlurX');
@@ -75,6 +76,7 @@ class PlayerTank extends Phaser.Sprite {
         }
         if (this.state.isProjAlive || (this.state.delay && this.state.delay.running)) return;
         if (this.state.turn != this.player-1) return;
+        this.didFireThisTurn = true;
         let x = (this.facingRight ? this.body.x : this.body.x+48);
         let proj = new Projectile(this.game, this.state, x, this.body.y-2, this, true);
         this.state.projectiles.add(proj);
@@ -92,6 +94,7 @@ class PlayerTank extends Phaser.Sprite {
         }
 
         if (this.rayAmmo-- > 0) {
+            this.didFireThisTurn = true;
             let x = (this.facingRight ? this.body.x : this.body.x+48);
             let proj = new Projectile(this.game, this.state, x, this.body.y-2, this, false);
             this.game.camera.follow(proj);
@@ -174,7 +177,7 @@ class PlayerTank extends Phaser.Sprite {
     update(hit) {
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
-        if (this.state.turn == this.player-1) {
+        if (this.state.turn == this.player-1 && !this.didFireThisTurn) {
             if (this.state.cursors.left.isDown) {
                 this.body.velocity.x = -150;
                 if (this.facingRight) {

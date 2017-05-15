@@ -149,6 +149,12 @@ class GameState extends Phaser.State {
 
 	toggleTurn() {
 		this.turn = 1 - this.turn;
+		if (this.turn == 0) {
+			this.player.didFireThisTurn = false;
+		}
+		else {
+			this.player2.didFireThisTurn = false;
+		}
 		// if (this.turn == 0) {
 		// 	this.player.update();
 		// 	this.player2.endTurn();
@@ -172,8 +178,7 @@ class GameState extends Phaser.State {
 		if (this.turn == 0) {
 			this.player.update(hitPlatform);
 			this.player2.endTurn();
-			if (!this.isProjAlive) this.game.camera.follow(this.player);
-			
+			if (!this.isProjAlive) this.game.camera.follow(this.player);	
 		}
 		else if (this.turn == 1) {
 			this.player2.update(hitPlatform2);
