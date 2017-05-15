@@ -58,7 +58,8 @@ class PlayerTank extends Phaser.Sprite {
         this.state.lights.add(this);
 
         // angle for firing
-        this.fireAngle = 45;
+        this.fireAngle = -45;
+        this.fireAngleOffset = 45;
 
         // key check for firing
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.X);
@@ -74,11 +75,12 @@ class PlayerTank extends Phaser.Sprite {
         }
         if (this.state.isProjAlive || (this.state.delay && this.state.delay.running)) return;
         if (this.state.turn != this.player-1) return;
-        let proj = new Projectile(this.game, this.state, this.x, this.y, this, true);
+        let x = (this.facingRight ? this.body.x : this.body.x+48);
+        let proj = new Projectile(this.game, this.state, x, this.body.y-2, this, true);
         this.state.projectiles.add(proj);
-        this.game.camera.follow(proj);
         this.state.lights.add(proj);
-        proj.fire(this.x, this.y, 0-this.fireAngle, 0, 300);
+        proj.fire(x, this.body.y-2, this.fireAngle, 0, 300);
+        this.game.camera.follow(proj);
     }
 
     fireRayProjectile() {
@@ -90,11 +92,12 @@ class PlayerTank extends Phaser.Sprite {
         }
 
         if (this.rayAmmo-- > 0) {
-            let proj = new Projectile(this.game, this.state, this.x, this.y, this, false);
+            let x = (this.facingRight ? this.body.x : this.body.x+48);
+            let proj = new Projectile(this.game, this.state, x, this.body.y-2, this, false);
             this.game.camera.follow(proj);
             this.state.projectiles.add(proj);
             this.state.lights.add(proj);
-            proj.fire(this.x, this.y, 0-this.fireAngle, 0, 300);
+            proj.fire(x, this.body.y-2, this.fireAngle, 0, 300);
             this.state.text = this.game.add.text(this.game.camera.width / 2, this.game.camera.height / 2, 
                 this.rayAmmo + " more ray tracers", {font: "30px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3});
         } else {
@@ -148,48 +151,44 @@ class PlayerTank extends Phaser.Sprite {
         // fireAngle indicator
         if (this.state.turn == this.player-1) {
             this.state.graphics.clear();
+
+            // determine offset based on direction
+            let xo = this.body.x + (this.facingRight ? 12 : 48);
+            let thetai = (this.facingRight ? this.game.math.degToRad(2) : this.game.math.degToRad(-88));
+            let thetaf = (this.facingRight ? this.game.math.degToRad(-90) : this.game.math.degToRad(-180));
+            let sign = (this.facingRight ? 1 : -1);
+
             // draw arc
             this.state.graphics.lineStyle(1, 0xFF3300);
             this.state.graphics.beginFill(0xFFFFFF, 0.2);
-            this.state.graphics.arc(this.x+12, this.y-2, 36, this.game.math.degToRad(2), this.game.math.degToRad(-90.0), true);
+            this.state.graphics.arc(xo, this.body.y-2, 36, thetai, thetaf, true);
             this.state.graphics.endFill();
 
             // draw aiming needle
-            this.state.graphics.moveTo(this.x+12, this.y-2);
-            this.state.graphics.lineTo(this.x+12+36*Math.cos(this.game.math.degToRad(this.fireAngle)), this.y-2-36*Math.sin(this.game.math.degToRad(this.fireAngle)));
+            this.state.graphics.moveTo(xo, this.body.y-2);
+            this.state.graphics.lineTo(xo+sign*36*Math.cos(this.game.math.degToRad(this.fireAngleOffset)), this.body.y-2-36*Math.sin(this.game.math.degToRad(this.fireAngleOffset)));
             this.state.graphics.moveTo(0, 0);
         }
     }
 
     update(hit) {
-        
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
         if (this.state.turn == this.player-1) {
-
             if (this.state.cursors.left.isDown) {
-                //console.log("left pressed");
-                
                 this.body.velocity.x = -150;
                 if (this.facingRight) {
                     this.scale.x = this.scale.x* -1;
                     this.facingRight = false;
-       
+                    this.fireAngle = -180+this.fireAngleOffset;
                 }
-
-            }
-     
-
+            }     
             else if (this.state.cursors.right.isDown) {
-                //console.log("right pressed");
-                console.log(this.facingRight);
                 this.body.velocity.x = 150;
                 if (!this.facingRight) {
-                    console.log(this.width);
                     this.scale.x = this.scale.x* -1;
-                    console.log(this.width);
                     this.facingRight = true;
-       
+                    this.fireAngle = 0-this.fireAngleOffset;
                 }
 
             }
@@ -197,13 +196,15 @@ class PlayerTank extends Phaser.Sprite {
                 this.animations.stop();
             }
             if (this.state.cursors.up.isDown) {
-                if (this.fireAngle < 90) {
-                    this.fireAngle += 0.3;
+                if (this.fireAngleOffset < 90) {
+                    this.fireAngleOffset += 0.3;
+                    this.fireAngle = (this.facingRight ? 0-this.fireAngleOffset : -180+this.fireAngleOffset);
                 }
             }
             if (this.state.cursors.down.isDown) {
-                if (this.fireAngle > 0) {
-                    this.fireAngle -= 0.3;
+                if (this.fireAngleOffset > 0) {
+                    this.fireAngleOffset -= 0.3;
+                    this.fireAngle = (this.facingRight ? 0-this.fireAngleOffset : -180+this.fireAngleOffset);
                 }
             }
         }
