@@ -18,6 +18,7 @@ class Projectile extends Phaser.Sprite {
 
         // physics & movement
         this.game.physics.enable(this, Phaser.Physics.ARCADE);
+        this.body.setCircle(3.5);
         this.body.immovable = false;
         this.body.checkWorldBounds = true;
         this.body.outOfBoundsKill = true;
