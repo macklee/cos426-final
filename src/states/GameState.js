@@ -32,7 +32,7 @@ class GameState extends Phaser.State {
 	    this.map.addTilesetImage('tiles2');
 	    
 	    this.layer = this.map.createLayer('Tile Layer 1');
-	    this.map.createLayer('Tile Layer 2');
+	    //this.map.createLayer('Tile Layer 2');
 
 	    this.layer.resizeWorld();
 	    this.map.setCollisionBetween(1, 12);

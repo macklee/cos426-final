@@ -30,7 +30,7 @@ class Projectile extends Phaser.Sprite {
         // bullet properties
         this.strength = 1;
         this.speed = 300;
-        console.log(this.state)
+      
     }
 
     fire(x, y, angle, gx, gy) {
@@ -61,7 +61,7 @@ class Projectile extends Phaser.Sprite {
         var hitPlatform = this.game.physics.arcade.collide(this, this.state.layer, this.onHitGround);
     }
 
-    /* doesn't work, has to reference the parent obj and not the sprite itself */
+    /* doesn't work, has to reference the parent obj and not the sprite 3itself */
     onHitPlayer(bullet, target) {
         
         //bullet.state.lights.remove(this);
