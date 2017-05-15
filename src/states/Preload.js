@@ -12,7 +12,7 @@ class Preload extends Phaser.State {
         this.game.load.image('tank', 'assets/tank.png', 32, 48);    
         this.game.load.image('turret', 'assets/turret.png')
         this.game.load.image('flame', 'assets/flame.png');
-        this.game.load.tilemap('map', 'assets/collision_test.json', null, Phaser.Tilemap.TILED_JSON);
+        this.game.load.tilemap('map', 'assets/cos426tiles.json', null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image('ground_1x1', 'assets/ground_1x1.png');
         this.game.load.image('walls_1x2', 'assets/walls_1x2.png');
         this.game.load.image('tiles2', 'assets/tiles2.png');

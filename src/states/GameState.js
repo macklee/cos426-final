@@ -162,6 +162,7 @@ class GameState extends Phaser.State {
 	}
 
 	update() {
+		
 		var hitPlatform = this.game.physics.arcade.collide(this.player, this.layer);
 		var hitPlatform2 = this.game.physics.arcade.collide(this.player2, this.layer);
 		//console.log(hitPlatform);

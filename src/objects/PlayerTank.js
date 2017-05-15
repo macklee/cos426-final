@@ -18,6 +18,7 @@ class PlayerTank extends Phaser.Sprite {
         this.final_timerEvent = this.final_timer.add(Phaser.Timer.QUARTER, this.endTimer, this);
         this.index = 0;
 
+        this.facingRight = true;
         var blurX_1 = this.game.add.filter('BlurX');
         var blurX_2 = this.game.add.filter('BlurX');
         var blurX_3 = this.game.add.filter('BlurX');
@@ -43,16 +44,14 @@ class PlayerTank extends Phaser.Sprite {
         this.game.physics.arcade.enable(this, Phaser.Physics.ARCADE);
         this.body.immovable = false;
         this.body.collideWorldBounds = true;
-        this.body.gravity.y = 300;
-        
-        // this.turret = game.add.sprite(this.x + 30, this.y + 14, 'turret');
-        // this.game.physics.enable(this.turret, Phaser.Physics.ARCADE);
-        // this.turret.body.immovable = false;
-        // this.turret.body.collideWorldBounds = true;
-        // this.turret.body.gravity.y = 300;
+        this.body.gravity.y = 700;
+        this.anchor.setTo(0.5,0.5);
+
         // fires a flame when shooting
         this.flame = game.add.sprite(0, 0, 'flame');
-        this.flame.anchor.set(0.5);
+        //this.flame.anchor.setTo(0.5, 0.5);
+
+
         this.flame.visible = false;
 
         // LIGHTSSSS
@@ -163,14 +162,36 @@ class PlayerTank extends Phaser.Sprite {
     }
 
     update(hit) {
+        
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
         if (this.state.turn == this.player-1) {
+
             if (this.state.cursors.left.isDown) {
+                //console.log("left pressed");
+                
                 this.body.velocity.x = -150;
+                if (this.facingRight) {
+                    this.scale.x = this.scale.x* -1;
+                    this.facingRight = false;
+       
+                }
+
             }
+     
+
             else if (this.state.cursors.right.isDown) {
+                //console.log("right pressed");
+                console.log(this.facingRight);
                 this.body.velocity.x = 150;
+                if (!this.facingRight) {
+                    console.log(this.width);
+                    this.scale.x = this.scale.x* -1;
+                    console.log(this.width);
+                    this.facingRight = true;
+       
+                }
+
             }
             else {
                 this.animations.stop();
@@ -187,11 +208,11 @@ class PlayerTank extends Phaser.Sprite {
             }
         }
         if (this.state.jumpKey.isDown && hit) {
-            this.body.velocity.y = -150;
+            this.body.velocity.y = -350;
         }
 
-        this.x = this.body.x;
-        this.y = this.body.y;
+        //this.x = this.body.x;
+        //this.y = this.body.y;
     }
 
     endTurn() {
