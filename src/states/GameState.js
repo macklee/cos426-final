@@ -90,6 +90,7 @@ class GameState extends Phaser.State {
 		this.graphics = this.game.add.graphics(0, 0);
         this.healthgraphics1 = this.game.add.graphics(0,0);
         this.healthgraphics2 = this.game.add.graphics(0,0);
+        this.staminagraphics = this.game.add.graphics(0,0);
 		// Initialize players
 
 		let height = this.game.world.height;
@@ -152,9 +153,11 @@ class GameState extends Phaser.State {
 		this.turn = 1 - this.turn;
 		if (this.turn == 0) {
 			this.player.didFireThisTurn = false;
+			this.player2.stamina = 60;
 		}
 		else {
 			this.player2.didFireThisTurn = false;
+			this.player.stamina = 60;
 		}
 		// if (this.turn == 0) {
 		// 	this.player.update();

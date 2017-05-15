@@ -18,6 +18,7 @@ class PlayerTank extends Phaser.Sprite {
         this.final_timerEvent = this.final_timer.add(Phaser.Timer.QUARTER, this.endTimer, this);
         this.index = 0;
         this.didFireThisTurn = false;
+        this.stamina = 60;
 
         this.facingRight = true;
         var blurX_1 = this.game.add.filter('BlurX');
@@ -204,12 +205,35 @@ class PlayerTank extends Phaser.Sprite {
         }
     }
 
+    drawStaminaBar() {
+        if (this.state.turn == this.player-1) {
+            this.state.staminagraphics.clear();
+            this.state.staminagraphics.lineStyle(0);
+            this.state.staminagraphics.beginFill(0xffff00, 1);
+            // if (this.body.velocity.x != 0 || this.body.velocity.y != 0) {
+            //     if (this.stamina > 0) {
+            //         this.stamina = this.stamina - 0.3;
+            //     }
+            // }
+            if (this.stamina < 0) {
+                this.stamina = 0;
+            }
+
+            this.state.staminagraphics.drawRect(this.body.x, this.body.y+45 , this.stamina, 5);
+            this.state.staminagraphics.endFill();
+        }
+    }
+
     update(hit) {
+        this.drawStaminaBar();
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
         if (this.state.turn == this.player-1 && !this.didFireThisTurn) {
             if (this.state.cursors.left.isDown) {
-                this.body.velocity.x = -150;
+                if (this.stamina > 0) {
+                    this.body.velocity.x = -150;
+                    this.stamina -= 0.5
+                }
                 if (this.facingRight) {
                     this.scale.x = this.scale.x* -1;
                     this.facingRight = false;
@@ -217,7 +241,10 @@ class PlayerTank extends Phaser.Sprite {
                 }
             }     
             else if (this.state.cursors.right.isDown) {
-                this.body.velocity.x = 150;
+                if (this.stamina > 0) {
+                    this.body.velocity.x = 150;
+                    this.stamina -= 0.5
+                }
                 if (!this.facingRight) {
                     this.scale.x = this.scale.x* -1;
                     this.facingRight = true;
@@ -241,8 +268,11 @@ class PlayerTank extends Phaser.Sprite {
                 }
             }
         }
-        if (this.state.jumpKey.isDown && hit) {
-            this.body.velocity.y = -350;
+        if (this.state.jumpKey.isDown && hit && this.stamina > 0) {
+            if (this.stamina > 10) {
+                this.body.velocity.y = -350;
+                this.stamina -= 10;
+            }
         }
 
         //this.x = this.body.x;
