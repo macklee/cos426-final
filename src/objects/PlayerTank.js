@@ -86,11 +86,11 @@ class PlayerTank extends Phaser.Sprite {
         
         this.body.velocity.x = 0;
         if (this.state.cursors.left.isDown) {
-            this.body.velocity.x = -150;
+            if (this.state.turn == this.player-1) this.body.velocity.x = -150;
             //this.tank.animations.play('left');
         }
         else if (this.state.cursors.right.isDown) {
-            this.body.velocity.x = 150;
+            if (this.state.turn == this.player-1) this.body.velocity.x = 150;
             //this.tank.animations.play('left2');
         }
         else {

@@ -90,29 +90,31 @@ class GameState extends Phaser.State {
 		if (this.turn == 0) {
 			this.player.update();
 			this.player2.endTurn();
+			this.game.camera.follow(this.player);
 		}
 		else if (this.turn == 1) {
 			this.player2.update();
 			this.player.endTurn();
+			this.game.camera.follow(this.player2);
 		}
 	}
 
 	update() {
-		var hitPlatform = this.game.physics.arcade.collide(this.player.tank, this.layer);
-		var hitPlatform2 = this.game.physics.arcade.collide(this.player2.tank, this.layer);
+		var hitPlatform = this.game.physics.arcade.collide(this.player, this.layer);
+		var hitPlatform2 = this.game.physics.arcade.collide(this.player2, this.layer);
         //this.player.checkLand();
         //this.player2.checkLand();
         
-		if (this.turn == 0) {
-			this.player.update();
-			this.player2.endTurn();
-			this.game.camera.follow(this.player.tank)
-		}
-		else if (this.turn == 1) {
-			this.player2.update();
-			this.player.endTurn();
-			this.game.camera.follow(this.player2.tank)
-		}
+		// if (this.turn == 0) {
+		// 	this.player.update();
+		// 	this.player2.endTurn();
+			
+		// }
+		// else if (this.turn == 1) {
+		// 	this.player2.update();
+		// 	this.player.endTurn();
+			
+		// }
 	}
 
 }
