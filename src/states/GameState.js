@@ -65,10 +65,10 @@ class GameState extends Phaser.State {
 		// this.land.addToWorld();
 
         //  A small burst of particles when a target is hit
-        this.emitter = this.add.emitter(0, 0, 30);
+        this.emitter = this.add.emitter(0, 0, 0);
         this.emitter.makeParticles('flame');
-        this.emitter.setXSpeed(-120, 120);
-        this.emitter.setYSpeed(-100, -200);
+        this.emitter.setXSpeed(-150, 150);
+        this.emitter.setYSpeed(150, -150);
         this.emitter.setRotation();
 
 		// Create 2 ledges

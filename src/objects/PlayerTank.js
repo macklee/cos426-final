@@ -26,11 +26,11 @@ class PlayerTank extends Phaser.Sprite {
         this.body.collideWorldBounds = true;
         this.body.gravity.y = 300;
         
-        this.turret = game.add.sprite(this.x + 30, this.y + 14, 'turret');
-        this.game.physics.enable(this.turret, Phaser.Physics.ARCADE);
-        this.turret.body.immovable = false;
-        this.turret.body.collideWorldBounds = true;
-        this.turret.body.gravity.y = 300;
+        // this.turret = game.add.sprite(this.x + 30, this.y + 14, 'turret');
+        // this.game.physics.enable(this.turret, Phaser.Physics.ARCADE);
+        // this.turret.body.immovable = false;
+        // this.turret.body.collideWorldBounds = true;
+        // this.turret.body.gravity.y = 300;
         // fires a flame when shooting
         this.flame = game.add.sprite(0, 0, 'flame');
         this.flame.anchor.set(0.5);

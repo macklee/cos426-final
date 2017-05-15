@@ -28,7 +28,7 @@ class Projectile extends Phaser.Sprite {
 
         // bullet properties
         this.strength = 1;
-        this.speed = 200;
+        this.speed = 300;
     }
 
     fire(x, y, angle, gx, gy) {
@@ -78,10 +78,10 @@ class Projectile extends Phaser.Sprite {
         var hitTank;
         // check for collision with p2 if fired by p1
         if (this.source.player == 1) {
-            hitTank = this.game.physics.arcade.collide(this, this.state.player2, this.onHitPlayer);
+            hitTank = this.game.physics.arcade.overlap(this, this.state.player2, this.onHitPlayer);
         }
         else if (this.source.player == 2) {
-            hitTank = this.game.physics.arcade.collide(this, this.state.player, this.onHitPlayer);
+            hitTank = this.game.physics.arcade.overlap(this, this.state.player, this.onHitPlayer);
         }
 
         // check for collision with platforms
@@ -95,6 +95,8 @@ class Projectile extends Phaser.Sprite {
     }
 
     onHitGround(bullet, layer) {
+        bullet.state.emitter.at(bullet);
+        bullet.state.emitter.explode(200, 10);
         bullet.kill();
     }
 
