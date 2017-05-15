@@ -25,7 +25,7 @@ class PlayerTank extends Phaser.Sprite {
         this.body.immovable = false;
         this.body.collideWorldBounds = true;
         this.body.gravity.y = 300;
-        this.mass = 400;
+        
         this.turret = game.add.sprite(this.x + 30, this.y + 14, 'turret');
         this.game.physics.enable(this.turret, Phaser.Physics.ARCADE);
         this.turret.body.immovable = false;
@@ -35,6 +35,9 @@ class PlayerTank extends Phaser.Sprite {
         this.flame = game.add.sprite(0, 0, 'flame');
         this.flame.anchor.set(0.5);
         this.flame.visible = false;
+
+        // LIGHTSSSS
+        this.state.lights.add(this);
 
         // physics & movement
         // this.game.physics.arcade.enable(this.tank, Phaser.Physics.ARCADE);
@@ -81,8 +84,8 @@ class PlayerTank extends Phaser.Sprite {
         return false;
     }
 
-    update() {
-        var hitPlatform = this.game.physics.arcade.collide(this, this.state.layer);
+    update(hit) {
+
         
         this.body.velocity.x = 0;
         if (this.state.cursors.left.isDown) {
@@ -98,9 +101,9 @@ class PlayerTank extends Phaser.Sprite {
             this.frame = 4;
         }
 
-        // if (this.state.cursors.up.isDown && this.tank.body.touching.down) {
-        //     this.tank.body.velocity.y = -350;
-        // }
+        if (this.state.cursors.up.isDown && hit) {
+            this.body.velocity.y = -150;
+        }
         this.x = this.body.x;
         this.y = this.body.y;
     }

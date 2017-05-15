@@ -17,11 +17,13 @@ class GameState extends Phaser.State {
 		var emitter;
 		var map;
 		var layer;
+		var shadowTexture
+		var lights;
 	}
 
 	create() {
 		// enable physics
-		this.game.world.setBounds(0,0,800,800);
+		this.game.world.setBounds(0,0,1000,600);
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		
 		this.map = this.game.add.tilemap('map')
@@ -44,6 +46,14 @@ class GameState extends Phaser.State {
 		// Enable physics for the platforms group
 		this.platforms.enableBody = true;
 
+		// ALL LIGHTING STUFF
+
+		this.LIGHT_RADIUS = 100;
+		this.shadowTexture = this.game.add.bitmapData(this.game.width, this.game.height);
+
+		var lightSprite = this.game.add.image(0, 0, this.shadowTexture);
+		this.lights = this.game.add.group();
+		lightSprite.blendMode = Phaser.blendModes.MULTIPLY;
 		// Create the ground
 		// let ground = this.platforms.create(0, this.game.world.height-64, 'ground');
 		// ground.scale.setTo(2, 2);
@@ -87,35 +97,75 @@ class GameState extends Phaser.State {
 
 	toggleTurn() {
 		this.turn = 1 - this.turn;
-		if (this.turn == 0) {
-			this.player.update();
-			this.player2.endTurn();
-			this.game.camera.follow(this.player);
-		}
-		else if (this.turn == 1) {
-			this.player2.update();
-			this.player.endTurn();
-			this.game.camera.follow(this.player2);
-		}
+		// if (this.turn == 0) {
+		// 	this.player.update();
+		// 	this.player2.endTurn();
+		// 	this.game.camera.follow(this.player);
+		// }
+		// else if (this.turn == 1) {
+		// 	this.player2.update();
+		// 	this.player.endTurn();
+		// 	this.game.camera.follow(this.player2);
+		// }
 	}
 
 	update() {
 		var hitPlatform = this.game.physics.arcade.collide(this.player, this.layer);
 		var hitPlatform2 = this.game.physics.arcade.collide(this.player2, this.layer);
+		//console.log(hitPlatform);
         //this.player.checkLand();
         //this.player2.checkLand();
         
-		// if (this.turn == 0) {
-		// 	this.player.update();
-		// 	this.player2.endTurn();
+		if (this.turn == 0) {
+			this.player.update(hitPlatform);
+			this.player2.endTurn();
+			this.game.camera.follow(this.player);
 			
-		// }
-		// else if (this.turn == 1) {
-		// 	this.player2.update();
-		// 	this.player.endTurn();
-			
-		// }
+		}
+		else if (this.turn == 1) {
+			this.player2.update(hitPlatform2);
+			this.player.endTurn();
+			this.game.camera.follow(this.player2);
+		}
+		this.updateShadowTexture()
+
 	}
+	updateShadowTexture() {
+	    // This function updates the shadow texture (this.shadowTexture).
+	    // First, it fills the entire texture with a dark shadow color.
+	    // Then it draws a white circle centered on the pointer position.
+	    // Because the texture is drawn to the screen using the MULTIPLY
+	    // blend mode, the dark areas of the texture make all of the colors
+	    // underneath it darker, while the white area is unaffected.
+
+
+	    // Draw shadow
+	    // change this to be 0,0,0 for it to become nothing
+	    this.shadowTexture.context.fillStyle = 'rgb(0, 0, 0)';
+	    this.shadowTexture.context.fillRect(0, 0, this.game.width, this.game.height);
+
+	    // Iterate through each of the lights and draw the glow
+	    this.lights.forEach(function(light) {
+	        // Randomly change the radius each frame
+	        var radius = this.LIGHT_RADIUS;
+
+	        // Draw circle of light with a soft edge
+	        var gradient =
+	            this.shadowTexture.context.createRadialGradient(
+	                light.x, light.y,this.LIGHT_RADIUS * 0.75,
+	                light.x, light.y, radius);
+	        gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+	        gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+
+	        this.shadowTexture.context.beginPath();
+	        this.shadowTexture.context.fillStyle = gradient;
+	        this.shadowTexture.context.arc(light.x, light.y, radius, 0, Math.PI*2);
+	        this.shadowTexture.context.fill();
+	    }, this);
+
+	    // This just tells the engine it should update the texture cache
+	    this.shadowTexture.dirty = true;
+	};
 
 }
 
