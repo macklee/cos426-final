@@ -78,6 +78,7 @@ class PlayerTank extends Phaser.Sprite {
         }
         if (this.state.isProjAlive || (this.state.delay && this.state.delay.running)) return;
         if (this.state.turn != this.player-1) return;
+        if (this.body.velocity.y != 0) return;
         this.didFireThisTurn = true;
         let x = (this.facingRight ? this.body.x : this.body.x+48);
         let proj = new Projectile(this.game, this.state, x, this.body.y-2, this, true);
@@ -90,7 +91,7 @@ class PlayerTank extends Phaser.Sprite {
     fireRayProjectile() {
         if (this.state.isProjAlive || (this.state.delay && this.state.delay.running)) return;
         if (this.state.turn != this.player-1) return;
-
+        if (this.body.velocity.y != 0) return;
         if (this.state.text){
             this.state.text.destroy();
         }
@@ -233,7 +234,7 @@ class PlayerTank extends Phaser.Sprite {
             if (this.state.cursors.left.isDown) {
                 if (this.stamina > 0) {
                     this.body.velocity.x = -150;
-                    this.stamina -= 0.5
+                    this.stamina -= 0.2
                 }
                 if (this.facingRight) {
                     this.scale.x = this.scale.x* -1;
@@ -244,7 +245,7 @@ class PlayerTank extends Phaser.Sprite {
             else if (this.state.cursors.right.isDown) {
                 if (this.stamina > 0) {
                     this.body.velocity.x = 150;
-                    this.stamina -= 0.5
+                    this.stamina -= 0.2
                 }
                 if (!this.facingRight) {
                     this.scale.x = this.scale.x* -1;
@@ -273,7 +274,7 @@ class PlayerTank extends Phaser.Sprite {
             if (this.stamina > 10 && this.released) {
                 this.released = false;
                 this.body.velocity.y = -350;
-                this.stamina -= 10;
+                this.stamina -= 5;
             }
         }
 
