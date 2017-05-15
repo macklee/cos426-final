@@ -88,7 +88,8 @@ class GameState extends Phaser.State {
 
 		// Instantiate graphics
 		this.graphics = this.game.add.graphics(0, 0);
-
+        this.healthgraphics1 = this.game.add.graphics(0,0);
+        this.healthgraphics2 = this.game.add.graphics(0,0);
 		// Initialize players
 
 		let height = this.game.world.height;
@@ -186,6 +187,8 @@ class GameState extends Phaser.State {
 			if (!this.isProjAlive) this.game.camera.follow(this.player2);
 		}
 		this.updateShadowTexture()
+		this.player.drawHealthBar();
+		this.player2.drawHealthBar();
 
 	}
 	updateShadowTexture() {

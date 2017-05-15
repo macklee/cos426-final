@@ -174,6 +174,36 @@ class PlayerTank extends Phaser.Sprite {
         }
     }
 
+    drawHealthBar() {
+        
+        if (this.player == 1) {
+            this.state.healthgraphics1.clear();
+            //draw rectangle
+            this.state.healthgraphics1.lineStyle(0);
+            this.state.healthgraphics1.beginFill(0xFFFF0000, 1);
+            this.state.healthgraphics1.drawRect(this.body.x -15, this.body.y-5+30 , 10, -30);
+            this.state.healthgraphics1.endFill();
+
+            this.state.healthgraphics1.lineStyle(0);
+            this.state.healthgraphics1.beginFill(0x32CD32, 1);
+            this.state.healthgraphics1.drawRect(this.body.x -15, this.body.y-5+30, 10, -30*(this.health)/3);
+            this.state.healthgraphics1.endFill();
+        }
+        else if (this.player == 2) {
+            this.state.healthgraphics2.clear();
+            //draw rectangle
+            this.state.healthgraphics2.lineStyle(0);
+            this.state.healthgraphics2.beginFill(0xFFFF0000, 1);
+            this.state.healthgraphics2.drawRect(this.body.x -15, this.body.y-5+30 , 10, -30);
+            this.state.healthgraphics2.endFill();
+
+            this.state.healthgraphics2.lineStyle(0);
+            this.state.healthgraphics2.beginFill(0x32CD32, 1);
+            this.state.healthgraphics2.drawRect(this.body.x -15, this.body.y-5+30, 10, -30*(this.health)/3);
+            this.state.healthgraphics2.endFill();
+        }
+    }
+
     update(hit) {
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
