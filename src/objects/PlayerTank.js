@@ -51,6 +51,7 @@ class PlayerTank extends Phaser.Sprite {
         if (this.state.turn != this.player-1) return;
         let proj = new Projectile(this.game, this.state, this.x, this.y, this);
         this.state.projectiles.add(proj);
+        this.state.lights.add(proj);
         proj.fire(this.x, this.y, 0-this.fireAngle, 0, 300);
     }
 

@@ -13,6 +13,7 @@ class Projectile extends Phaser.Sprite {
 
         Phaser.Sprite.call(this, game, x, y, 'bullet');
         game.add.existing(this);
+
         // sprite
         // this.bullet = game.add.sprite(x, y, 'bullet');
 
@@ -30,6 +31,7 @@ class Projectile extends Phaser.Sprite {
         // bullet properties
         this.strength = 1;
         this.speed = 300;
+      
     }
 
     fire(x, y, angle, gx, gy) {
@@ -43,36 +45,7 @@ class Projectile extends Phaser.Sprite {
         this.body.gravity.set(gx, gy);
     }
 
-    checkLand() {
-        //  Simple bounds check
-        //console.log("sup")
-        if (this.body.x < 0 || this.body.x > this.game.world.width || this.body.y > this.game.height)
-        {
-            this.removeBullet();
-            return;
-        }
 
-        var x = Math.floor(this.body.x);
-        var y = Math.floor(this.body.y);
-
-        var rgba = this.state.land.getPixel(x, y);
-        var rgba2 = this.state.land.getPixel(x+1, y+1);
-        var rgba3 = this.state.land.getPixel(x-1, y-1);
-        var rgba4 = this.state.land.getPixel(x-1, y+1);
-        if (rgba.a > 0 || rgba2.a > 0 || rgba3.a || rgba4.a)
-        {
-            //console.log("lol")  
-            // this.state.land.blendDestinationOut();
-            // this.state.land.circle(x, y, 16, 'rgba(0, 0, 0, 255');
-            // this.state.land.blendReset();
-            // this.state.land.update();
-
-            //  If you like you could combine the above 4 lines:
-            //this.state.land.blendDestinationOut().circle(x, y, 16, 'rgba(0, 0, 0, 255').blendReset().update();
-
-            this.body.velocity.y = 0;
-        }
-    }
 
     update() {
         //this.bullet.body.velocity.x = 300;
@@ -89,13 +62,17 @@ class Projectile extends Phaser.Sprite {
         var hitPlatform = this.game.physics.arcade.collide(this, this.state.layer, this.onHitGround);
     }
 
-    /* doesn't work, has to reference the parent obj and not the sprite itself */
+    /* doesn't work, has to reference the parent obj and not the sprite 3itself */
     onHitPlayer(bullet, target) {
+        
+        //bullet.state.lights.remove(this);
         target.damage();
         bullet.kill();
     }
 
     onHitGround(bullet, layer) {
+        
+        //bullet.state.lights.remove(this);
         bullet.state.emitter.at(bullet);
         bullet.state.emitter.explode(200, 10);
         bullet.kill();
