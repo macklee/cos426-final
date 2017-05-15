@@ -77,8 +77,10 @@ class GameState extends Phaser.State {
 		// ledge = this.platforms.create(-150, 250, 'ground');
 		// ledge.body.immovable = true;
 
-		// Initialize players
+		// Instantiate graphics
+		this.graphics = this.game.add.graphics(0, 0);
 
+		// Initialize players
 
 		let height = this.game.world.height;
 		this.player = new PlayerTank(this.game, this, this.game.world.randomX, this.game.rnd.integerInRange(0, height-64), 1);
@@ -92,6 +94,7 @@ class GameState extends Phaser.State {
 		this.cursors = this.game.input.keyboard.createCursorKeys();
 		this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		this.spaceKey.onDown.add(this.toggleTurn, this);
+		this.jumpKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
 		this.turn = 0;
 	}
 
@@ -115,7 +118,7 @@ class GameState extends Phaser.State {
 		//console.log(hitPlatform);
         //this.player.checkLand();
         //this.player2.checkLand();
-        
+        this.graphics.clear();
 		if (this.turn == 0) {
 			this.player.update(hitPlatform);
 			this.player2.endTurn();
