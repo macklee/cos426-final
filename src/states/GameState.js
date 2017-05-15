@@ -23,7 +23,7 @@ class GameState extends Phaser.State {
 
 	create() {
 		// enable physics
-		this.game.world.setBounds(0,0,1000,600);
+		this.game.world.setBounds(0,0,1600,600);
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		
 		this.map = this.game.add.tilemap('map')
@@ -49,7 +49,7 @@ class GameState extends Phaser.State {
 		// ALL LIGHTING STUFF
 
 		this.LIGHT_RADIUS = 100;
-		this.shadowTexture = this.game.add.bitmapData(this.game.width, this.game.height);
+		this.shadowTexture = this.game.add.bitmapData(1600, this.game.height);
 
 		var lightSprite = this.game.add.image(0, 0, this.shadowTexture);
 		this.lights = this.game.add.group();
@@ -145,7 +145,7 @@ class GameState extends Phaser.State {
 	    // Draw shadow
 	    // change this to be 0,0,0 for it to become nothing
 	    this.shadowTexture.context.fillStyle = 'rgb(0, 0, 0)';
-	    this.shadowTexture.context.fillRect(0, 0, this.game.width, this.game.height);
+	    this.shadowTexture.context.fillRect(0, 0, 1600, this.game.height);
 
 	    // Iterate through each of the lights and draw the glow
 	    this.lights.forEach(function(light) {
