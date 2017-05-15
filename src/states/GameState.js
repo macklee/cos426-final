@@ -19,9 +19,18 @@ class GameState extends Phaser.State {
 		var layer;
 		var shadowTexture
 		var lights;
+
+		var timer;
+		var timerEvent;
+
+		var isProjAlive;
+		var text;
+		var delay;
 	}
 
 	create() {
+		this.startTimer();
+
 		// enable physics
 		this.game.world.setBounds(0,0,1600,600);
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -98,6 +107,46 @@ class GameState extends Phaser.State {
 		this.turn = 0;
 	}
 
+	startTimer() {
+		this.timer = this.game.time.create();
+		this.timerEvent = this.timer.add(Phaser.Timer.SECOND * 30, this.endTimer, this);
+		this.timer.start();
+	}
+
+	render() {
+		// If our timer is running, show the time in a nicely formatted way, else show 'Done!'
+        if (this.timer.running) {
+            this.game.debug.text(this.formatTime(Math.round((this.timerEvent.delay - this.timer.ms) / 1000)), 2, 14, "#ff0");
+        	//this.game.debug.text("Done!", 2, 14, "#0f0");
+        }
+        else {
+            this.game.debug.text("Done!", 2, 14, "#0f0");
+        }
+	}
+
+	formatTime(s) {
+        // Convert seconds (s) to a nicely formatted and padded time string
+        var minutes = "0" + Math.floor(s / 60);
+        var seconds = "0" + (s - minutes * 60);
+        return minutes.substr(-2) + ":" + seconds.substr(-2);   
+    }
+
+	endTimer() {
+        // Stop the timer when the delayed event triggers
+        this.timer.stop();
+        if (!this.isProjAlive) {
+        	this.delay = this.game.time.create();
+        	var delayEvent = this.delay.add(Phaser.Timer.SECOND * 1.5, this.stopDelay, this);
+        	this.delay.start();
+    	}
+    }
+
+    stopDelay() {
+		this.delay.stop();
+    	this.toggleTurn();
+        this.startTimer();
+    }
+
 	toggleTurn() {
 		this.turn = 1 - this.turn;
 		// if (this.turn == 0) {
@@ -122,13 +171,13 @@ class GameState extends Phaser.State {
 		if (this.turn == 0) {
 			this.player.update(hitPlatform);
 			this.player2.endTurn();
-			this.game.camera.follow(this.player);
+			if (!this.isProjAlive) this.game.camera.follow(this.player);
 			
 		}
 		else if (this.turn == 1) {
 			this.player2.update(hitPlatform2);
 			this.player.endTurn();
-			this.game.camera.follow(this.player2);
+			if (!this.isProjAlive) this.game.camera.follow(this.player2);
 		}
 		this.updateShadowTexture()
 
@@ -169,7 +218,6 @@ class GameState extends Phaser.State {
 	    // This just tells the engine it should update the texture cache
 	    this.shadowTexture.dirty = true;
 	};
-
 }
 
 export default GameState;

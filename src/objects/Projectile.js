@@ -1,7 +1,10 @@
 class Projectile extends Phaser.Sprite {
 
-    constructor (game, state, x, y, source) {
-        super(game, x, y, 'bullet');
+    constructor (game, state, x, y, source, isBullet) {
+        if (isBullet) super(game, x, y, 'bullet');
+        else super(game, x, y, 'star');
+
+        this.maxBounce = 3;
 
         // basic position/status variables
         this.game = game;
@@ -11,8 +14,11 @@ class Projectile extends Phaser.Sprite {
         this.source = source;
         this.exists = false;
 
-        Phaser.Sprite.call(this, game, x, y, 'bullet');
+
+        if (isBullet) Phaser.Sprite.call(this, game, x, y, 'bullet');
+        else Phaser.Sprite.call(this, game, x, y, 'star');
         game.add.existing(this);
+        this.type = isBullet;
 
         // sprite
         // this.bullet = game.add.sprite(x, y, 'bullet');
@@ -21,17 +27,21 @@ class Projectile extends Phaser.Sprite {
         this.game.physics.enable(this, Phaser.Physics.ARCADE);
         this.body.setCircle(3.5);
         this.body.immovable = false;
-        this.body.checkWorldBounds = true;
+        if (!isBullet)
+            this.body.bounce = new Phaser.Point(1, 1);
+        //this.body.checkWorldBounds = true;
+        this.body.collideWorldBounds = true;
         this.body.outOfBoundsKill = true;
-        this.body.gravity.y = 300;
+        if (isBullet)
+            this.body.gravity.y = 300;
         this.angle = source.fireAngle;
         this.tracking = false;
         this.scaleSpeed = 0;
 
         // bullet properties
         this.strength = 1;
-        this.speed = 300;
-      
+        this.speed = 400;
+
     }
 
     fire(x, y, angle, gx, gy) {
@@ -42,7 +52,10 @@ class Projectile extends Phaser.Sprite {
         this.game.physics.arcade.velocityFromAngle(angle, this.speed, this.body.velocity);
         
         this.angle = angle;
-        this.body.gravity.set(gx, gy);
+        if (this.type)
+            this.body.gravity.set(gx, gy);
+
+        this.state.isProjAlive = true;
     }
 
 
@@ -67,7 +80,10 @@ class Projectile extends Phaser.Sprite {
         
         //bullet.state.lights.remove(this);
         target.damage();
+        bullet.game.camera.follow(bullet.state.turn == 0 ? bullet.state.player : bullet.state.player2);
         bullet.kill();
+        bullet.state.isProjAlive = false;
+        bullet.state.endTimer();
     }
 
     onHitGround(bullet, layer) {
@@ -75,7 +91,13 @@ class Projectile extends Phaser.Sprite {
         //bullet.state.lights.remove(this);
         bullet.state.emitter.at(bullet);
         bullet.state.emitter.explode(200, 10);
-        bullet.kill();
+        console.log(bullet.type);
+        if ((!bullet.type && --bullet.maxBounce <= 0) || bullet.type) {
+            //ray
+            bullet.kill();
+            bullet.state.isProjAlive = false;
+            bullet.state.endTimer();
+        }
     }
 
 }

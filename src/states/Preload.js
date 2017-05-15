@@ -16,7 +16,8 @@ class Preload extends Phaser.State {
         this.game.load.image('ground_1x1', 'assets/ground_1x1.png');
         this.game.load.image('walls_1x2', 'assets/walls_1x2.png');
         this.game.load.image('tiles2', 'assets/tiles2.png');
-
+        this.game.load.script('BlurX', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurX.js');
+        this.game.load.script('BlurY', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurY.js');
     }
 
     create() {
