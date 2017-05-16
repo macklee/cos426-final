@@ -114,6 +114,21 @@ class GameState extends Phaser.State {
                	"Player 1", {font: "20px Arial", fill: "#33B2FF", stroke: '#000000', strokeThickness: 3});
         this.player_text.anchor.setTo(0.5, 0.5);
         this.player_text.fixedToCamera = true;
+
+        let instruc_text = this.game.add.text(this.game.width - 102, 14,
+        	"x: bomb", {font: "14px Arial", fill: "#FFFFFF", stroke: '#000000', strokeThickness: 3});
+        instruc_text.anchor.setTo(0.5, 0.5);
+        instruc_text.fixedToCamera = true;
+        
+        instruc_text = this.game.add.text(this.game.width - 90, 34,
+        	"c: ray tracer", {font: "14px Arial", fill: "#FFFFFF", stroke: '#000000', strokeThickness: 3});
+        instruc_text.anchor.setTo(0.5, 0.5);
+        instruc_text.fixedToCamera = true;
+
+        instruc_text = this.game.add.text(this.game.width - 75, 54,
+        	"space_bar: jump", {font: "14px Arial", fill: "#FFFFFF", stroke: '#000000', strokeThickness: 3});
+        instruc_text.anchor.setTo(0.5, 0.5);
+        instruc_text.fixedToCamera = true;
 	}
 
 	startTimer() {
@@ -153,7 +168,8 @@ class GameState extends Phaser.State {
 
     stopDelay() {
 		this.delay.stop();
-		this.bullet.destroy();
+		if (this.bullet)
+			this.bullet.kill();
     	this.toggleTurn();
         this.startTimer();
     }
