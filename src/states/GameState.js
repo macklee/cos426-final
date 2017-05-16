@@ -90,6 +90,8 @@ class GameState extends Phaser.State {
 		let height = this.game.world.height;
 		this.player = new PlayerTank(this.game, this, this.game.world.randomX, this.game.rnd.integerInRange(0, height-64), 1);
 		this.player2 = new PlayerTank(this.game, this, this.game.world.randomX, this.game.rnd.integerInRange(0, height-64), 2);
+		this.player.tint = "0x33B2FF";
+		this.player2.tint = "0xFF6B66";
 
 		// Setup group for tracking projectiles
 		this.projectiles = this.game.add.group();

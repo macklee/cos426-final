@@ -65,7 +65,7 @@ class PlayerTank extends Phaser.Sprite {
         // angle for firing
         this.fireAngle = -45;
         this.fireAngleOffset = 45;
-        this.projectileSpeed = 300;
+        this.projectileSpeed = 100;
 
         // key check for firing
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.X);
@@ -169,7 +169,9 @@ class PlayerTank extends Phaser.Sprite {
             let sign = (this.facingRight ? 1 : -1);
 
             // draw arc
-            this.state.graphics.lineStyle(1, 0xFF3300);
+            let color = (this.player-1 == 0 ? 0x33B2FF : 0xFF6B66);
+            //this.state.graphics.lineStyle(1, 0xFF3300);
+            this.state.graphics.lineStyle(1, color);
             this.state.graphics.beginFill(0xFFFFFF, 0.2);
             this.state.graphics.arc(xo, this.body.y-2, 36, thetai, thetaf, true);
             this.state.graphics.endFill();
@@ -235,6 +237,11 @@ class PlayerTank extends Phaser.Sprite {
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
         if (this.state.turn == this.player-1 && !this.didFireThisTurn) {
+            if (this.fireKey.isDown) {
+                if (this.projectileSpeed < 500) {
+                    this.projectileSpeed += Math.max(25, 500-this.projectileSpeed);
+                }
+            }
             if (this.state.cursors.left.isDown) {
                 if (this.stamina > 0) {
                     this.body.velocity.x = -150;
