@@ -23,7 +23,7 @@ To build this game, you should clone this repository, then from within its direc
 
 `npm install`
 
-`npm run`
+`npm start`
 
 The game should be accessible at localhost:3000.
 
