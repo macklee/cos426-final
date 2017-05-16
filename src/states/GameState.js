@@ -131,12 +131,14 @@ class GameState extends Phaser.State {
         instruc_text.fixedToCamera = true;
 	}
 
+	// Taken from http://jsfiddle.net/lewster32/vd70o41p/
 	startTimer() {
 		this.timer = this.game.time.create();
 		this.timerEvent = this.timer.add(Phaser.Timer.SECOND * 30, this.endTimer, this);
 		this.timer.start();
 	}
 
+	// Taken from http://jsfiddle.net/lewster32/vd70o41p/
 	render() {
 		// If our timer is running, show the time in a nicely formatted way, else show 'Done!'
         if (this.timer.running) {
@@ -148,6 +150,7 @@ class GameState extends Phaser.State {
         }
 	}
 
+	// Taken from http://jsfiddle.net/lewster32/vd70o41p/
 	formatTime(s) {
         // Convert seconds (s) to a nicely formatted and padded time string
         var minutes = "0" + Math.floor(s / 60);
