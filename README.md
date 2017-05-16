@@ -7,15 +7,22 @@ Each tank has a health reserve of 3 points, indicated by the bar to the left of 
 
 # Controls
 Left/Right arrow keys: left/right movement
+
 Up/Down arrow keys: control angle of fire
+
 Spacebar: jump
+
 X: fire bomb projectile (hold to charge speed, release to fire)
+
 C: fire ray tracer projectile (hold to charge speed, release to fire)
+
 
 # Building
 
-To build this game, you should clone this repository, then from within its directory,
+To build this game, you should clone this repository, then from within its directory (with Node/npm installed),
+
 `npm install`
+
 `npm run`
 
 The game should be accessible at localhost:3000.
