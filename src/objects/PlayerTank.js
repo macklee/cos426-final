@@ -46,7 +46,9 @@ class PlayerTank extends Phaser.Sprite {
         // physics & movement
         this.game.physics.arcade.enable(this, Phaser.Physics.ARCADE);
         this.body.immovable = false;
-        this.body.collideWorldBounds = true;
+        //this.body.collideWorldBounds = true;
+        this.checkWorldBounds = true;
+        this.events.onOutOfBounds.add(this.killTank, this);
         this.body.gravity.y = 700;
         this.anchor.setTo(0.5,0.5);
 
@@ -63,13 +65,29 @@ class PlayerTank extends Phaser.Sprite {
         // angle for firing
         this.fireAngle = -45;
         this.fireAngleOffset = 45;
+        this.projectileSpeed = 300;
 
         // key check for firing
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.X);
-		this.fireKey.onDown.add(this.fireProjectile, this);
+		this.fireKey.onUp.add(this.fireProjectile, this);
 
         this.fireRay = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
-        this.fireRay.onDown.add(this.fireRayProjectile, this);
+        this.fireRay.onUp.add(this.fireRayProjectile, this);
+    }
+
+    killTank() {
+        var text = this.game.add.text(this.game.camera.width / 2, this.game.camera.height / 2, 
+                "Game Over", {font: "65px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3});
+        text.anchor.setTo(0.5, 0.5);
+        text.fixedToCamera = true;
+        this.alive = false;
+        this.kill();
+
+        this.blurY = this.game.add.filter('BlurY');
+
+        this.blurY.blur = 1;
+
+        this.final_timer.start();
     }
 
     fireProjectile() {
@@ -119,27 +137,13 @@ class PlayerTank extends Phaser.Sprite {
         this.health -= 1;
         console.log("player " + this.player + " was hit");
         if (this.health <= 0) {
-            var text = this.game.add.text(this.game.camera.width / 2, this.game.camera.height / 2, 
-                "Game Over", {font: "65px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3});
-            text.anchor.setTo(0.5, 0.5);
-            text.fixedToCamera = true;
-            this.alive = false;
-            this.kill();
-
-            this.blurY = this.game.add.filter('BlurY');
-
-            this.blurY.blur = 1;
-
-            this.final_timer.start();
-
-
+            this.killTank();
             return true;
         }
         return false;
     }
 
     endTimer() {
-        console.log("endTimer");
         this.final_timer.stop();
         if (this.index >= this.array.length) {
             return;
@@ -271,9 +275,9 @@ class PlayerTank extends Phaser.Sprite {
             }
         }
         if (this.state.jumpKey.isDown && hit && this.stamina > 0) {
-            if (this.stamina > 10 && this.released) {
+            if (this.stamina > 10 && this.released && this.body.velocity.y == 0) {
                 this.released = false;
-                this.body.velocity.y = -350;
+                this.body.velocity.y = -400;
                 this.stamina -= 5;
             }
         }

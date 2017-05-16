@@ -80,12 +80,6 @@ class GameState extends Phaser.State {
         this.emitter.setYSpeed(150, -150);
         this.emitter.setRotation();
 
-		// Create 2 ledges
-		// let ledge = this.platforms.create(400, 400, 'ground');
-		// ledge.body.immovable = true;
-		// ledge = this.platforms.create(-150, 250, 'ground');
-		// ledge.body.immovable = true;
-
 		// Instantiate graphics
 		this.graphics = this.game.add.graphics(0, 0);
         this.healthgraphics1 = this.game.add.graphics(0,0);
@@ -103,10 +97,12 @@ class GameState extends Phaser.State {
 
 		// input handlers
 		this.cursors = this.game.input.keyboard.createCursorKeys();
-		this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		this.spaceKey.onDown.add(this.toggleTurn, this);
-		this.jumpKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
+		//this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		//this.spaceKey.onDown.add(this.toggleTurn, this);
+		this.jumpKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		this.turn = 0;
+
+		this.game.camera.follow(this.player);
 	}
 
 	startTimer() {
@@ -154,10 +150,14 @@ class GameState extends Phaser.State {
 		if (this.turn == 0) {
 			this.player.didFireThisTurn = false;
 			this.player2.stamina = 60;
+			this.game.camera.follow(this.player);
+			if (this.text) this.text.destroy();
 		}
 		else {
 			this.player2.didFireThisTurn = false;
 			this.player.stamina = 60;
+			this.game.camera.follow(this.player2);
+			if (this.text) this.text.destroy();
 		}
 		// if (this.turn == 0) {
 		// 	this.player.update();
@@ -175,19 +175,17 @@ class GameState extends Phaser.State {
 		
 		var hitPlatform = this.game.physics.arcade.collide(this.player, this.layer);
 		var hitPlatform2 = this.game.physics.arcade.collide(this.player2, this.layer);
-		//console.log(hitPlatform);
-        //this.player.checkLand();
-        //this.player2.checkLand();
+		
         this.graphics.clear();
 		if (this.turn == 0) {
 			this.player.update(hitPlatform);
 			this.player2.endTurn();
-			if (!this.isProjAlive) this.game.camera.follow(this.player);	
+			//if (!this.isProjAlive) this.game.camera.follow(this.player);	
 		}
 		else if (this.turn == 1) {
 			this.player2.update(hitPlatform2);
 			this.player.endTurn();
-			if (!this.isProjAlive) this.game.camera.follow(this.player2);
+			//if (!this.isProjAlive) this.game.camera.follow(this.player2);
 		}
 		this.updateShadowTexture()
 		this.player.drawHealthBar();

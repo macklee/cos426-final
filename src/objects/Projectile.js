@@ -29,9 +29,9 @@ class Projectile extends Phaser.Sprite {
         this.body.immovable = false;
         if (!isBullet)
             this.body.bounce = new Phaser.Point(1, 1);
-        //this.body.checkWorldBounds = true;
-        this.body.collideWorldBounds = true;
-        this.body.outOfBoundsKill = true;
+        this.checkWorldBounds = true;
+        this.events.onOutOfBounds.add(this.killBullet, this);
+        //this.body.outOfBoundsKill = true;
         if (isBullet)
             this.body.gravity.y = 300;
         this.angle = source.fireAngle;
@@ -41,7 +41,12 @@ class Projectile extends Phaser.Sprite {
         // bullet properties
         this.strength = 1;
         this.speed = 400;
+    }
 
+    killBullet() {
+        this.kill();
+        this.state.isProjAlive = false;
+        this.state.endTimer(this);
     }
 
     fire(x, y, angle, gx, gy) {
@@ -58,11 +63,15 @@ class Projectile extends Phaser.Sprite {
         this.state.isProjAlive = true;
     }
 
-
-
     update() {
         //this.bullet.body.velocity.x = 300;
         var hitTank;
+        // if (this.body.x < 0 || this.body.y < 0 || this.body.x > this.game.width || this.body.y > this.game.height) {
+        //     this.kill();
+        //     this.state.isProjAlive = false;
+        //     this.state.endTimer(this);
+        //     return;
+        // }
         // check for collision with p2 if fired by p1
         if (this.source.player == 1) {
             hitTank = this.game.physics.arcade.overlap(this, this.state.player2, this.onHitPlayer);
@@ -80,18 +89,17 @@ class Projectile extends Phaser.Sprite {
         
         //bullet.state.lights.remove(this);
         target.damage();
-        bullet.game.camera.follow(bullet.state.turn == 0 ? bullet.state.player : bullet.state.player2);
+        //bullet.game.camera.follow(bullet.state.turn == 0 ? bullet.state.player : bullet.state.player2);
         bullet.kill();
         bullet.state.isProjAlive = false;
-        bullet.state.endTimer();
+        bullet.state.endTimer(bullet);
     }
 
     onHitGround(bullet, layer) {
-        
+        bullet.state.map.removeTile(layer.x, layer.y);
         //bullet.state.lights.remove(this);
         bullet.state.emitter.at(bullet);
         bullet.state.emitter.explode(200, 10);
-        console.log(bullet.type);
         if ((!bullet.type && --bullet.maxBounce <= 0) || bullet.type) {
             //ray
             bullet.kill();
