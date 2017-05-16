@@ -40,7 +40,7 @@ class Projectile extends Phaser.Sprite {
 
         // bullet properties
         this.strength = 1;
-        this.speed = 400;
+        this.speed = source.projectileSpeed;
     }
 
     killBullet() {

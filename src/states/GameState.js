@@ -151,12 +151,14 @@ class GameState extends Phaser.State {
 		this.turn = 1 - this.turn;
 		if (this.turn == 0) {
 			this.player.didFireThisTurn = false;
+			this.player.projectileSpeed = 100;
 			this.player2.stamina = 60;
 			this.game.camera.follow(this.player);
 			if (this.text) this.text.destroy();
 		}
 		else {
 			this.player2.didFireThisTurn = false;
+			this.player2.projectileSpeed = 100;
 			this.player.stamina = 60;
 			this.game.camera.follow(this.player2);
 			if (this.text) this.text.destroy();

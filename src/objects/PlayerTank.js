@@ -175,6 +175,9 @@ class PlayerTank extends Phaser.Sprite {
             this.state.graphics.beginFill(0xFFFFFF, 0.2);
             this.state.graphics.arc(xo, this.body.y-2, 36, thetai, thetaf, true);
             this.state.graphics.endFill();
+            this.state.graphics.beginFill(0xFFFFFF, 1.0);
+            this.state.graphics.arc(xo, this.body.y-2, (this.projectileSpeed-100)*36/600, thetai, thetaf, true);
+            this.state.graphics.endFill();
 
             // draw aiming needle
             this.state.graphics.moveTo(xo, this.body.y-2);
@@ -237,9 +240,9 @@ class PlayerTank extends Phaser.Sprite {
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
         if (this.state.turn == this.player-1 && !this.didFireThisTurn) {
-            if (this.fireKey.isDown) {
-                if (this.projectileSpeed < 500) {
-                    this.projectileSpeed += Math.max(25, 500-this.projectileSpeed);
+            if (this.fireKey.isDown || this.fireRay.isDown) {
+                if (this.projectileSpeed < 700) {
+                    this.projectileSpeed += Math.min(10, 700-this.projectileSpeed);
                 }
             }
             if (this.state.cursors.left.isDown) {
