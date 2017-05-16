@@ -110,7 +110,7 @@ class GameState extends Phaser.State {
 		this.turn = 0;
 
 		this.game.camera.follow(this.player);
-		this.player_text = this.game.add.text(125, 14, 
+		this.player_text = this.game.add.text(140, 14, 
                	"Player 1", {font: "20px Arial", fill: "#33B2FF", stroke: '#000000', strokeThickness: 3});
         this.player_text.anchor.setTo(0.5, 0.5);
         this.player_text.fixedToCamera = true;
@@ -129,7 +129,7 @@ class GameState extends Phaser.State {
         	//this.game.debug.text("Done!", 2, 14, "#0f0");
         }
         else {
-            this.game.debug.text("Done!", 2, 14, "#0f0");
+            this.game.debug.text("Time's up!", 2, 14, "#0f0");
         }
 	}
 
@@ -166,7 +166,7 @@ class GameState extends Phaser.State {
 			this.player2.stamina = 60;
 			this.game.camera.follow(this.player);
 			if (this.text) this.text.destroy();
-			this.player_text = this.game.add.text(125, 14, 
+			this.player_text = this.game.add.text(140, 14, 
                	"Player 1", {font: "20px Arial", fill: "#33B2FF", stroke: '#000000', strokeThickness: 3});
 			this.player_text.anchor.setTo(0.5, 0.5);
         	this.player_text.fixedToCamera = true;
@@ -177,7 +177,7 @@ class GameState extends Phaser.State {
 			this.player.stamina = 60;
 			this.game.camera.follow(this.player2);
 			if (this.text) this.text.destroy();
-			this.player_text = this.game.add.text(125, 14, 
+			this.player_text = this.game.add.text(140, 14, 
                	"Player 2", {font: "20px Arial", fill: "#FF6B66", stroke: '#000000', strokeThickness: 3});
 			this.player_text.anchor.setTo(0.5, 0.5);
         	this.player_text.fixedToCamera = true;
