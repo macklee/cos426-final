@@ -172,7 +172,7 @@ class GameState extends Phaser.State {
     stopDelay() {
 		this.delay.stop();
 		if (this.bullet)
-			this.bullet.kill();
+			this.bullet.destroy();
     	this.toggleTurn();
         this.startTimer();
     }
