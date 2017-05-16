@@ -79,9 +79,9 @@ class Projectile extends Phaser.Sprite {
         else if (this.source.player == 2) {
             hitTank = this.game.physics.arcade.overlap(this, this.state.player, this.onHitPlayer);
         }
-
         // check for collision with platforms
         var hitPlatform = this.game.physics.arcade.collide(this, this.state.layer, this.onHitGround);
+        
     }
 
     /* doesn't work, has to reference the parent obj and not the sprite 3itself */
@@ -106,7 +106,7 @@ class Projectile extends Phaser.Sprite {
             //ray
             bullet.kill();
             bullet.state.isProjAlive = false;
-            bullet.state.endTimer();
+            bullet.state.endTimer(bullet);
         }
     }
 

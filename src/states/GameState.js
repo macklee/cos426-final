@@ -140,9 +140,10 @@ class GameState extends Phaser.State {
         return minutes.substr(-2) + ":" + seconds.substr(-2);   
     }
 
-	endTimer() {
+	endTimer(bullet) {
         // Stop the timer when the delayed event triggers
         this.timer.stop();
+		this.bullet = bullet;
         if (!this.isProjAlive) {
         	this.delay = this.game.time.create();
         	var delayEvent = this.delay.add(Phaser.Timer.SECOND * 1.5, this.stopDelay, this);
@@ -152,6 +153,7 @@ class GameState extends Phaser.State {
 
     stopDelay() {
 		this.delay.stop();
+		this.bullet.destroy();
     	this.toggleTurn();
         this.startTimer();
     }
