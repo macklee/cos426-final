@@ -88,8 +88,12 @@ class GameState extends Phaser.State {
 		// Initialize players
 
 		let height = this.game.world.height;
-		this.player = new PlayerTank(this.game, this, this.game.world.randomX, this.game.rnd.integerInRange(0, height-64), 1);
-		this.player2 = new PlayerTank(this.game, this, this.game.world.randomX, this.game.rnd.integerInRange(0, height-64), 2);
+		let center = this.game.world.width/2;
+
+		// this.player = new PlayerTank(this.game, this, this.game.world.randomX, this.game.rnd.integerInRange(0, height-64), 1);
+		// this.player2 = new PlayerTank(this.game, this, this.game.world.randomX, this.game.rnd.integerInRange(0, height-64), 2);
+		this.player = new PlayerTank(this.game, this, this.game.rnd.integerInRange(64, center-128), this.game.rnd.integerInRange(0, height-64), 1);
+		this.player2 = new PlayerTank(this.game, this, this.game.rnd.integerInRange(center+128, this.game.world.width-64), this.game.rnd.integerInRange(0, height-64), 2);
 		this.player.tint = "0x33B2FF";
 		this.player2.tint = "0xFF6B66";
 
