@@ -90,6 +90,8 @@ class Projectile extends Phaser.Sprite {
         //bullet.state.lights.remove(this);
         target.damage();
         //bullet.game.camera.follow(bullet.state.turn == 0 ? bullet.state.player : bullet.state.player2);
+        bullet.state.emitter.at(bullet);
+        bullet.state.emitter.explode(200, 10);
         bullet.kill();
         bullet.state.isProjAlive = false;
         bullet.state.endTimer(bullet);
