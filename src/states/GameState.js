@@ -25,6 +25,7 @@ class GameState extends Phaser.State {
 
 		var isProjAlive;
 		var text;
+		var player_text;
 		var delay;
 	}
 
@@ -105,6 +106,10 @@ class GameState extends Phaser.State {
 		this.turn = 0;
 
 		this.game.camera.follow(this.player);
+		this.player_text = this.game.add.text(125, 14, 
+               	"Player 1", {font: "20px Arial", fill: "#33B2FF", stroke: '#000000', strokeThickness: 3});
+        this.player_text.anchor.setTo(0.5, 0.5);
+        this.player_text.fixedToCamera = true;
 	}
 
 	startTimer() {
@@ -149,12 +154,18 @@ class GameState extends Phaser.State {
 
 	toggleTurn() {
 		this.turn = 1 - this.turn;
+		if (this.player_text)
+			this.player_text.destroy();
 		if (this.turn == 0) {
 			this.player.didFireThisTurn = false;
 			this.player.projectileSpeed = 100;
 			this.player2.stamina = 60;
 			this.game.camera.follow(this.player);
 			if (this.text) this.text.destroy();
+			this.player_text = this.game.add.text(125, 14, 
+               	"Player 1", {font: "20px Arial", fill: "#33B2FF", stroke: '#000000', strokeThickness: 3});
+			this.player_text.anchor.setTo(0.5, 0.5);
+        	this.player_text.fixedToCamera = true;
 		}
 		else {
 			this.player2.didFireThisTurn = false;
@@ -162,6 +173,10 @@ class GameState extends Phaser.State {
 			this.player.stamina = 60;
 			this.game.camera.follow(this.player2);
 			if (this.text) this.text.destroy();
+			this.player_text = this.game.add.text(125, 14, 
+               	"Player 2", {font: "20px Arial", fill: "#FF6B66", stroke: '#000000', strokeThickness: 3});
+			this.player_text.anchor.setTo(0.5, 0.5);
+        	this.player_text.fixedToCamera = true;
 		}
 		// if (this.turn == 0) {
 		// 	this.player.update();
