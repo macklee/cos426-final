@@ -240,7 +240,7 @@ class PlayerTank extends Phaser.Sprite {
         this.drawAngleIndicator();
         this.body.velocity.x = 0;
         if (this.state.turn == this.player-1 && !this.didFireThisTurn) {
-            if (this.fireKey.isDown || this.fireRay.isDown) {
+            if ((this.fireKey.isDown || this.fireRay.isDown) && this.body.velocity.y == 0) {
                 if (this.projectileSpeed < 700) {
                     this.projectileSpeed += Math.min(10, 700-this.projectileSpeed);
                 }
